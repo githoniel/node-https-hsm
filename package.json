@@ -1,15 +1,22 @@
 {
   "name": "https-hsm",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.2",
+  "description": "make https request using HSM in pure JS",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["https", "tls", "hsm","ukey"],
+  "author": "githoniel",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/githoniel/node-https-hsm"
+  },
   "dependencies": {
+    
+  },
+  "devDependencies": {
     "axios": "^0.18.0",
     "babel-eslint": "^7.2.3",
     "body-parser": "^1.18.2",
