@@ -1,10 +1,8 @@
 # node-https-hsm
 
-Nodejs's native https is a wrap of OpenSSL. 
+Nodejs's native https is a wrap of OpenSSL. If you want to use HSM(hardware security module), you need to use openSSL's `SetEngine` function and you need to write C code.
 
-If you want to use HSM(hardware security module), you need to use openSSL's `SetEngine` function and you need to write C code.
-
-This lib is based on [node-forge](https://github.com/digitalbazaar/forge) (A pure JS implementation of TLS via Nodejs `net.socket`).
+This lib is based on [node-forge](https://github.com/digitalbazaar/forge) (A pure JS implementation of TLS via Nodejs `net.socket`). You can make Certificate Signature by RSA in JS. This in a very common use in bank's USBkey.
 
 ## node-forge
 
