@@ -306,7 +306,7 @@ var emsaPkcs1v15encode = function(md) {
   // encode digest info
   return asn1.toDer(digestInfo).getBytes();
 };
-
+forge.pki.rsa.emsaPkcs1v15encode = emsaPkcs1v15encode;
 /**
  * Performs x^c mod n (RSA encryption or decryption operation).
  *
@@ -1168,8 +1168,6 @@ pki.setRsaPrivateKey = pki.rsa.setPrivateKey = function(
    *
    * @return the signature as a byte string.
    */
-  key.emsaPkcs1v15encode = emsaPkcs1v15encode;
-  
   key.sign = function(md, scheme) {
     /* Note: The internal implementation of RSA operations is being
       transitioned away from a PKCS#1 v1.5 hard-coded scheme. Some legacy

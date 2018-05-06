@@ -1,81 +1,33 @@
-const forge = require('../node-forge')
-const http = require('../node-forge/http')
-const net = require('net')
 const fs = require('fs')
+const forge = require('../node-forge')
 
-var socket = new net.Socket()
+const httpsHSM = require('../')
 
-var client = forge.tls.createConnection({
-    server: false,
-    caStore: [fs.readFileSync('./node-tls/ca-crt.pem').toString()],
-    getCertificate() {
-        return fs.readFileSync('./node-tls/client1-crt.pem').toString()
+httpsHSM({
+    host: '127.0.0.1',
+    port: 8000,
+    path: '/t',
+    headers: {
+        'content-type': 'application/json;charset=UTF-8'
     },
-    //   getPrivateKey() {
-    //       return fs.readFileSync('./node-tls/client1-key.pem').toString()
-    //   },
-    //   getCertificate: function(connection, hint) {
-    //     var crt = fs.readFileSync('./maohj1.crt', 'binary')
-    //     var bytes = forge.util.createBuffer(crt)
-    //     var asn1 = forge.asn1.fromDer(bytes)
-    //     var cert = forge.pki.certificateFromAsn1(asn1, true)
-    //     // cert.sign('xxx', forge.md.sha256.create())
-    //     var pem = forge.pki.certificateToPem(cert)
-    //     return pem
-    //   },
-    getSignature(c, b, callback) {
-        var privateKey = fs.readFileSync('./node-tls/client1-key.pem').toString()
-        privateKey = forge.pki.privateKeyFromPem(privateKey)
-        b = privateKey.emsaPkcs1v15encode(c.session.sha256)
-        b = privateKey.sign(b, null);
-        callback(c, b)
+    body: {
+        name: 'Hello World!',
+        age: 2046
     },
-    connected: function (connection) {
-        console.log('[tls] connected');
-        const body = JSON.stringify({
-            'name': 'Hello World!',
-            'age': 2046
-        })
-        const request = http.createRequest({
-            method: 'POST',
-            path: '/t',
-            headers: {
-                'content-type': 'application/json;charset=UTF-8'
-            },
-            body
-        })
-        const requestString = request.toString()
-        client.prepare(requestString);
-        client.prepare(body);
-        // client.prepare('POST /t HTTP/1.0\r\n\r\n');
+    async getCA() {
+        return [fs.readFileSync('./test/ca-crt.pem').toString()]
     },
-    tlsDataReady: function (connection) {
-        // encrypted data is ready to be sent to the server
-        var data = connection.tlsData.getBytes();
-        socket.write(data, 'binary'); // encoding should be 'binary'
+    async getCert() {
+        return fs.readFileSync('./test/client1-crt.pem').toString()
     },
-    dataReady: function (connection) {
-        // clear data from the server is ready
-        var data = connection.data.getBytes();
-        console.log('[tls] data received from the server: ' + data);
+    async rsaSign(b) {
+        const privateKeyStr = fs.readFileSync('./test/client1-key.pem').toString()
+        const privateKey = forge.pki.privateKeyFromPem(privateKeyStr)
+        return privateKey.sign(b, null)
     },
-    closed: function () {
-        console.log('[tls] disconnected');
-    },
-    error: function (connection, error) {
-        console.log('[tls] error', error);
-    }
-});
-
-socket.on('connect', function () {
-    console.log('[socket] connected');
-    client.handshake();
-});
-socket.on('data', function (data) {
-    client.process(data.toString('binary')); // encoding should be 'binary'
-});
-socket.on('end', function () {
-    console.log('[socket] disconnected');
-});
-
-socket.connect(8000, '127.0.0.1');
+    debug: false
+}).then((r) => {
+    console.log(r)
+}, (e) => {
+    console.error(e)
+})

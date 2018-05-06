@@ -8,25 +8,19 @@
             "type": "node",
             "request": "launch",
             "name": "server",
-            "program": "${workspaceFolder}\\node-tls\\server.js"
+            "program": "${workspaceFolder}\\test\\server.js"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "forge",
-            "program": "${workspaceFolder}\\node-tls\\forge.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "forge-http",
-            "program": "${workspaceFolder}\\node-tls\\forge-http.js"
+            "program": "${workspaceFolder}\\test\\forge.js"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "client",
-            "program": "${workspaceFolder}\\node-tls\\client.js"
+            "program": "${workspaceFolder}\\test\\client.js"
         }
     ]
 }
