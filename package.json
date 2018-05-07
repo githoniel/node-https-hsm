@@ -1,6 +1,6 @@
 {
   "name": "https-hsm",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "make https request using HSM in pure JS",
   "main": "index.js",
   "scripts": {

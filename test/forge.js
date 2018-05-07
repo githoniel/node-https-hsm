@@ -1,9 +1,8 @@
 const fs = require('fs')
-const forge = require('../node-forge')
 
 const httpsHSM = require('../')
 
-httpsHSM({
+httpsHSM.request({
     host: '127.0.0.1',
     port: 8000,
     path: '/t',
@@ -22,10 +21,10 @@ httpsHSM({
     },
     async rsaSign(b) {
         const privateKeyStr = fs.readFileSync('./test/client1-key.pem').toString()
-        const privateKey = forge.pki.privateKeyFromPem(privateKeyStr)
+        const privateKey = httpsHSM.forge.pki.privateKeyFromPem(privateKeyStr)
         return privateKey.sign(b, null)
     },
-    debug: false
+    debug: true
 }).then((r) => {
     console.log(r)
 }, (e) => {
