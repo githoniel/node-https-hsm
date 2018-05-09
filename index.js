@@ -2,6 +2,8 @@ const forge = require('./node-forge')
 const http = require('./node-forge/http')
 const net = require('net')
 
+const response = http.createResponse()
+
 module.exports = {
     forge,
     /**
@@ -66,7 +68,7 @@ module.exports = {
                     }
                     const sign = await rsaSign(hash)
                     if (debug) {
-                        console.log(`Client Certificate Signature: ${b}`)
+                        console.log(`Client Certificate Signature: ${sign}`)
                     }
                     callback(c, sign)
                 },
@@ -95,14 +97,19 @@ module.exports = {
                     socket.write(data, 'binary')
                 },
                 dataReady(connection) {
-                    const data = connection.data.getBytes()
                     if (debug) {
-                        console.log(`[tls] data received from the server: ${data}`)
+                        console.log(`[tls] data received from the server: ${connection.data}`)
                     }
-                    if (data.indexOf('HTTP/') === 0) {
+                    if (!response.headerReceived) {
+                        response.readHeader(connection.data)
+                    }
+                    if (!response.bodyReceived) {
+                        response.readBody(connection.data)
+                    }
+                    if (!response.bodyReceived) {
                         return
                     }
-                    resolve(data)
+                    resolve(response)
                     socket.destroy()
                 },
                 closed() {
